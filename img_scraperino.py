@@ -3,7 +3,7 @@ import requests
 import random
 from bs4 import BeautifulSoup
 
-URL = "https://www.deviantart.com/search/deviations?cursor=MTQwYWI2MjA9MiY1OTBhY2FkMD0yNCZkMTc0YjZiYz1lMTg2MTJmNzAyMzJlZWIyMTZiNjhkZDVkMWExOWY1NQ&q=tboi"
+URL = "https://www.deviantart.com/search/deviations?q=tboi"
 
 
 def img_scraperino(url, folder):
@@ -11,10 +11,10 @@ def img_scraperino(url, folder):
     soup = BeautifulSoup(req.text, "html.parser")
 
     try:
-        os.mkdir(os.path.join(os.getcwd(), folder))
-        os.chdir(os.path.join(os.getcwd(), folder))
+        os.mkdir(os.path.join(os.getcwd(), "loot/" + folder))
+        os.chdir(os.path.join(os.getcwd(), "loot/" + folder))
     except:
-        os.chdir(os.path.join(os.getcwd(), folder))
+        os.chdir(os.path.join(os.getcwd(), "loot/" + folder))
 
     def img_filter(img):
         if '.deviantart' in img['src']:
