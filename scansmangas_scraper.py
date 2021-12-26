@@ -29,7 +29,7 @@ def get_page_nb(first_page):
 
 def get_scans_from_all_pages(page_nb, url):
     scans_list = []
-    for i in range(1, int(page_nb)):
+    for i in range(1, int(page_nb) + 1):
         page = get_page(url + str(i))
         img_tag = page.find_all('img')[1]
         cleaned_img = clean_img_tag(img_tag)
