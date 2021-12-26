@@ -70,10 +70,12 @@ def scan_down(scans):
     for scan in scans:
         filename = re.search(r"(?<=Scan )(.*)", scan['alt']).group(1).replace(' ', '-') + '.jpg'
         with open(filename, 'wb') as f_out:
+            print('-' * 30)
             print(scan['src'])
+            print(f'Downloading {filename}...')
+            print('\n')
             sc = requests.get(scan['src'])
             f_out.write(sc.content)
-            print(f'Downloading {filename}...')
 
 
 def clean_img_tag(img):
