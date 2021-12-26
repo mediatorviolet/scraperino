@@ -116,7 +116,7 @@ def main():
     print('Downloading scans...')
     scan_down(scans)
 
-    # Todo: print le path du dossier où les scans ont été dl. Faire en sorte que le path soit clickable
+    print(f'Files downloaded at: {os.getcwd()}')
 
 
 if __name__ == "__main__":
