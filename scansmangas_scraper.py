@@ -9,7 +9,6 @@ from bs4 import BeautifulSoup
 # Todo: lier le script avec google drive pour envoyer le fichier sur le drive et pouvoir le récup sur phone
 # Todo: sur le long terme (ou pas), modulariser le programme pour pouvoir l'utiliser sur d'autres sites
 # Todo: écrire des docstring pour les functions
-# Todo: print un petit tuto au start pour au moins expliquer le template du l'url
 
 
 def get_page(url, i=''):
@@ -81,10 +80,21 @@ def clean_img_tag(img):
     return img
 
 
+def clean_base_url(url):
+    if url.endswith('?im='):
+        return url
+    elif url.endswith('/'):
+        return url + '?im='
+    else:
+        trailing_digits = re.search(r"(\d+)$", url).group()
+
+        return url.replace(trailing_digits, '')
+
+
 def main():
     print('Program started')
 
-    url = input('Paste url: ')
+    url = clean_base_url(input('Paste url: '))
 
     print('Getting first page...')
     first_page = get_page(url)
