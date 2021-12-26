@@ -9,6 +9,7 @@ from bs4 import BeautifulSoup
 # Todo: lier le script avec google drive pour envoyer le fichier sur le drive et pouvoir le récup sur phone
 # Todo: sur le long terme (ou pas), modulariser le programme pour pouvoir l'utiliser sur d'autres sites
 # Todo: écrire des docstring pour les functions
+# Todo: print un message au start
 
 
 def get_page(url, i=''):
@@ -48,6 +49,7 @@ def set_working_dir(name):
     dir_name = os.path.join(os.getcwd(), 'loot/' + name)
 
     if os.path.exists(dir_name):
+        # Todo: faire une sorte de select
         should_change_name = input(
             f'The directory \'{dir_name}\' already exists.\n Would you like to create a new one? (yes, no) ')
 
