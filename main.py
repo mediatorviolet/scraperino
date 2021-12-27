@@ -23,7 +23,7 @@ for page in range(1, 12):
         d["link"] = link
         anime_list.append(d)
 
-filename = "anime.csv"
+filename = "loot/anime.csv"
 with open(filename, 'w', newline='') as f:
     w = csv.DictWriter(f, ['title', 'thumbnail', 'score', 'link'])
     w.writeheader()
