@@ -9,23 +9,32 @@ def jpg_to_pdf(dirname, filename):
     pdf = FPDF(unit='pt')
     pdf.set_auto_page_break(0)
 
-    jpg_list = [x for x in sorted(os.listdir(dirname)) if x.endswith('.jpg')]
-    jpg_list = sort_by_name(jpg_list)
-    # print(jpg_list)
+    jpg_list = [x for x in os.listdir(dirname) if x.endswith('.jpg')]
+    sorted_jpg_list = sort_by_name(jpg_list)
 
     # Todo: handle landscape format if w > h
-    for jpg in jpg_list:
+    # Ça met bien en landscape quand nécessaire mais le format de l'image est fucked...
+    for jpg in sorted_jpg_list:
         path = os.path.join(dirname, jpg)
         img = Image.open(path)
-        pdf.add_page()
-        pdf.image(path, 0, 0, w=img.size[0] / dpi * 72, h=img.size[1] / dpi * 72)
+        width = img.size[0]
+        height = img.size[1]
+
+        if width > height:
+            pdf.add_page(orientation='L')
+            pdf.image(path, 0, 0, w=width / dpi * 72, h=height / dpi * 72)
+        else:
+            pdf.add_page(orientation='P')
+            pdf.image(path, 0, 0, w=width / dpi * 72, h=height / dpi * 72)
 
     pdf.output(os.path.join(dirname, filename))
 
 
 def main():
-    dirname = input('dirname: ')
-    filename = input('filename: ')
+    dirname = input('Path to directory: ')
+    filename = input('Output file name: ')
+    if not filename.endswith('.pdf'):
+        filename += filename + '.pdf'
 
     jpg_to_pdf(dirname, filename)
 
