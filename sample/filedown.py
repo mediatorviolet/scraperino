@@ -12,7 +12,6 @@ def main():
     url = input("Paste url: ")
     filename = input("What should we name the file? ")
     filedown(url, filename)
-    # Todo: rendre le lien clickable
     print(f'File downloaded at {os.path.join(os.getcwd(), filename)}')
 
 
