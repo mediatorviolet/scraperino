@@ -132,6 +132,11 @@ def clean_base_url(url):
 
 def main():
     print('Program started')
+    init_msg = 'Valid URL are:\n' \
+               '- https://scansmangas.xyz/manga/{manga name}/\n' \
+               '- https://scansmangas.xyz/manga/{manga name}/?im=\n' \
+               '- https://scansmangas.xyz/manga/{manga name}/?im={page number}'
+    print(init_msg)
 
     url = clean_base_url(input('Paste url: '))
 
