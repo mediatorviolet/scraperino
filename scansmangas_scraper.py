@@ -7,10 +7,7 @@ from sample.image_to_pdf import image_to_pdf
 from sample.move_file import move_file
 
 
-# Todo: Après le dl, faire function pour grouper les jpg. Si oui, on peut choisir le format (d'abord .pdf)
-# Todo: lier le script avec google drive pour envoyer le fichier sur le drive et pouvoir le récup sur phone
 # Todo: sur le long terme (ou pas), modulariser le programme pour pouvoir l'utiliser sur d'autres sites
-# Todo: print un message au start
 
 
 def get_page(url, i=''):
