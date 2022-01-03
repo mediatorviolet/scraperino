@@ -3,6 +3,8 @@ import re
 import time
 import requests
 from bs4 import BeautifulSoup
+from sample.image_to_pdf import image_to_pdf
+from sample.move_file import move_file
 
 
 # Todo: Après le dl, faire function pour grouper les jpg. Si oui, on peut choisir le format (d'abord .pdf)
@@ -65,7 +67,7 @@ def get_dir_name(url):
     :param url: str
     :return: name: str
     """
-    name = re.search(r"(?<=/scan-)(.*)(?=/)", url).group(1)
+    name = re.search(r"(?<=/scan-)(.*)(?=-vf/)", url).group(1)
 
     return name
 
@@ -89,11 +91,11 @@ def set_working_dir(name):
             os.makedirs(new_dir_name)
             os.chdir(new_dir_name)
         elif should_change_name == 'no':
-            os.chdir(os.path.join(dir_name))
+            os.chdir(dir_name)
         # Todo: Gérer si l'input du directory est pas valide
     else:
         os.makedirs(dir_name)
-        os.chdir(os.path.join(dir_name))
+        os.chdir(dir_name)
 
 
 def scan_down(scans):
@@ -130,6 +132,10 @@ def clean_base_url(url):
         return url.replace(trailing_digits, '')
 
 
+def increment_url(url, i):
+    return clean_base_url(re.sub(r'(?<=-)(\d+)(?=-vf)', str(i), url))
+
+
 def main():
     print('Program started')
     init_msg = 'Valid URL are:\n' \
@@ -138,25 +144,36 @@ def main():
                '- https://scansmangas.xyz/manga/{manga name}/?im={page number}'
     print(init_msg)
 
-    url = clean_base_url(input('Paste url: '))
+    url = input('Paste url: ')
+    folder_destination_path = input('Paste path to destination folder: ')
+    for i in range(41, 51):
+        url = increment_url(url, i)
+        print(url)
+        # print('Getting first page...')
+        # first_page = get_page(url)
+        #
+        # print('Getting page number...')
+        # page_nb = get_page_nb(first_page)
+        #
+        # print('Creating scans list...')
+        # scans = get_scans_from_all_pages(page_nb, url)
 
-    print('Getting first page...')
-    first_page = get_page(url)
+        print('Setting up directory...')
+        dir_name = get_dir_name(url)
+        set_working_dir(dir_name)
 
-    print('Getting page number...')
-    page_nb = get_page_nb(first_page)
+        # print('Downloading scans...')
+        # scan_down(scans)
 
-    print('Creating scans list...')
-    scans = get_scans_from_all_pages(page_nb, url)
+        print('Creating pdf...')
+        image_to_pdf('./', f'{dir_name}.pdf')
 
-    print('Setting up directory...')
-    dir_name = get_dir_name(url)
-    set_working_dir(dir_name)
+        print(f'Moving pdf file to destination folder: {folder_destination_path}')
+        move_file(os.getcwd(), dir_name + '.pdf', folder_destination_path)
 
-    print('Downloading scans...')
-    scan_down(scans)
-
-    print(f'Files downloaded at: {os.getcwd()}')
+        print(f'Files downloaded at: {folder_destination_path}')
+        os.chdir('..')
+        os.chdir('..')
 
 
 if __name__ == "__main__":
