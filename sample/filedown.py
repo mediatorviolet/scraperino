@@ -3,8 +3,11 @@ import requests
 
 
 def filedown(url, filename):
+    """Write a file from URL
+    """
     with open(filename, 'wb') as f_out:
         file = requests.get(url)
+        print(f'writing {filename}')
         f_out.write(file.content)
 
 
