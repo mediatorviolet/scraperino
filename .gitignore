@@ -3,3 +3,4 @@
 loot/
 **/__pycache__
 resources.txt
+geckodriver.log
