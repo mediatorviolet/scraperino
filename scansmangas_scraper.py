@@ -146,21 +146,21 @@ def main():
     for i in range(41, 51):
         url = increment_url(url, i)
         print(url)
-        # print('Getting first page...')
-        # first_page = get_page(url)
-        #
-        # print('Getting page number...')
-        # page_nb = get_page_nb(first_page)
-        #
-        # print('Creating scans list...')
-        # scans = get_scans_from_all_pages(page_nb, url)
+        print('Getting first page...')
+        first_page = get_page(url)
+
+        print('Getting page number...')
+        page_nb = get_page_nb(first_page)
+
+        print('Creating scans list...')
+        scans = get_scans_from_all_pages(page_nb, url)
 
         print('Setting up directory...')
         dir_name = get_dir_name(url)
         set_working_dir(dir_name)
 
-        # print('Downloading scans...')
-        # scan_down(scans)
+        print('Downloading scans...')
+        scan_down(scans)
 
         print('Creating pdf...')
         image_to_pdf('./', f'{dir_name}.pdf')
