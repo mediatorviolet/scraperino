@@ -138,12 +138,15 @@ def main():
     init_msg = 'Valid URL are:\n' \
                '- https://scansmangas.xyz/manga/{manga name}/\n' \
                '- https://scansmangas.xyz/manga/{manga name}/?im=\n' \
-               '- https://scansmangas.xyz/manga/{manga name}/?im={page number}'
+               '- https://scansmangas.xyz/manga/{manga name}/?im={page number}\n'
     print(init_msg)
 
     url = input('Paste url: ')
     folder_destination_path = input('Paste path to destination folder: ')
-    for i in range(41, 51):
+    first_chapter = input('Enter first chapter number: ')
+    last_chapter = input('Enter last chapter number: ')
+    print('\n')
+    for i in range(int(first_chapter), int(last_chapter) + 1):
         url = increment_url(url, i)
         print(url)
         print('Getting first page...')
@@ -167,6 +170,8 @@ def main():
 
         print(f'Moving pdf file to destination folder: {folder_destination_path}')
         move_file(os.getcwd(), dir_name + '.pdf', folder_destination_path)
+
+        # Todo: remove img directory in loot/
 
         print(f'Files downloaded at: {folder_destination_path}')
         os.chdir('..')
