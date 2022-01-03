@@ -136,9 +136,9 @@ def increment_url(url, i):
 def main():
     print('Program started')
     init_msg = 'Valid URL are:\n' \
-               '- https://scansmangas.xyz/manga/{manga name}/\n' \
-               '- https://scansmangas.xyz/manga/{manga name}/?im=\n' \
-               '- https://scansmangas.xyz/manga/{manga name}/?im={page number}\n'
+               '- https://scansmangas.xyz/manga/scan-{manga name}-{chapter number}-vf/\n' \
+               '- https://scansmangas.xyz/manga/scan-{manga name}-{chapter number}-vf/?im=\n' \
+               '- https://scansmangas.xyz/manga/scan-{manga name}-{chapter number}-vf/?im={page number}\n'
     print(init_msg)
 
     url = input('Paste url: ')
