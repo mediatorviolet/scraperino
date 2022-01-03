@@ -3,8 +3,9 @@ import re
 import time
 import requests
 from bs4 import BeautifulSoup
-from sample.image_to_pdf import image_to_pdf
 from sample.move_file import move_file
+from sample.image_to_pdf import image_to_pdf
+from sample.loading_animation import load_bar
 
 
 # Todo: sur le long terme (ou pas), modulariser le programme pour pouvoir l'utiliser sur d'autres sites
@@ -49,6 +50,8 @@ def get_scans_from_all_pages(page_nb, url):
     """
     scans_list = []
     for i in range(1, int(page_nb) + 1):
+        time.sleep(0.1)
+        load_bar(i, int(page_nb), prefix="Progress", suffix="Done", length=int(page_nb))
         page = get_page(url + str(i))
         img_tag = page.find_all('img')[1]
         cleaned_img = clean_img_tag(img_tag)
@@ -101,13 +104,11 @@ def scan_down(scans):
     :param scans: list
     :return: void
     """
-    for scan in scans:
+    for i, scan in enumerate(scans):
         filename = re.search(r"(?<=Scan )(.*)", scan['alt']).group(1).replace(' ', '-') + '.jpg'
         with open(filename, 'wb') as f_out:
-            print('-' * 30)
-            print(scan['src'])
-            print(f'Downloading {filename}...')
-            print('\n')
+            time.sleep(0.1)
+            load_bar(i + 1, len(scans), prefix=f"Downloading {filename}", suffix='Done', length=len(scans))
             sc = requests.get(scan['src'])
             f_out.write(sc.content)
 
