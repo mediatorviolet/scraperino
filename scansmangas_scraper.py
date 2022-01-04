@@ -1,11 +1,14 @@
 import os
 import re
 import time
+import shutil
 import requests
 from bs4 import BeautifulSoup
 from sample.move_file import move_file
 from sample.image_to_pdf import image_to_pdf
 from sample.loading_animation import load_bar
+from sample.get_chapters import get_chapters
+from sample.dict_utils import search_index
 
 
 # Todo: sur le long terme (ou pas), modulariser le programme pour pouvoir l'utiliser sur d'autres sites
@@ -56,20 +59,9 @@ def get_scans_from_all_pages(page_nb, url):
         img_tag = page.find_all('img')[1]
         cleaned_img = clean_img_tag(img_tag)
         scans_list.append(cleaned_img)
-        time.sleep(1)
+        time.sleep(0.5)
 
     return scans_list
-
-
-def get_dir_name(url):
-    """Get directory name from html page
-
-    :param url: str
-    :return: name: str
-    """
-    name = re.search(r"(?<=/scan-)(.*)(?=-vf/)", url).group(1)
-
-    return name
 
 
 def set_working_dir(name):
@@ -136,10 +128,10 @@ def increment_url(url, i):
 
 def main():
     print('Program started')
-    init_msg = 'Valid URL are:\n' \
-               '- https://scansmangas.xyz/manga/scan-{manga name}-{chapter number}-vf/\n' \
-               '- https://scansmangas.xyz/manga/scan-{manga name}-{chapter number}-vf/?im=\n' \
-               '- https://scansmangas.xyz/manga/scan-{manga name}-{chapter number}-vf/?im={page number}\n'
+    init_msg = 'Valid URL example:\n' \
+               '- https://scansmangas.xyz/manga/solo-leveling-vf-lel-fr-lire-va-scans/\n' \
+               '- https://scansmangas.xyz/manga/shingeki-no-kyojin-vf/\n' \
+               '- https://scansmangas.xyz/manga/one-piece-vf-lel/\n'
     print(init_msg)
 
     url = input('Paste url: ')
@@ -147,20 +139,24 @@ def main():
     first_chapter = input('Enter first chapter number: ')
     last_chapter = input('Enter last chapter number: ')
     print('\n')
-    for i in range(int(first_chapter), int(last_chapter) + 1):
-        url = increment_url(url, i)
-        print(url)
+
+    chapters = get_chapters(url)
+    start_index = search_index(chapters, 'chapter', first_chapter)
+    end_index = search_index(chapters, 'chapter', last_chapter)
+
+    for chap in chapters[start_index:end_index + 1]:
+        print(clean_base_url(chap["url"]))
         print('Getting first page...')
-        first_page = get_page(url)
+        first_page = get_page(clean_base_url(chap["url"]))
 
         print('Getting page number...')
         page_nb = get_page_nb(first_page)
 
         print('Creating scans list...')
-        scans = get_scans_from_all_pages(page_nb, url)
+        scans = get_scans_from_all_pages(page_nb, clean_base_url(chap["url"]))
 
         print('Setting up directory...')
-        dir_name = get_dir_name(url)
+        dir_name = f"{chap['name']}-{chap['chapter']}"
         set_working_dir(dir_name)
 
         print('Downloading scans...')
@@ -172,11 +168,14 @@ def main():
         print(f'Moving pdf file to destination folder: {folder_destination_path}')
         move_file(os.getcwd(), dir_name + '.pdf', folder_destination_path)
 
-        # Todo: remove img directory in loot/
-
         print(f'Files downloaded at: {folder_destination_path}')
         os.chdir('..')
         os.chdir('..')
+
+        try:
+            shutil.rmtree(f'loot/{dir_name}')
+        except OSError as e:
+            print("Error: %s: %s" % (f'loot/{dir_name}', e.strerror))
 
 
 if __name__ == "__main__":

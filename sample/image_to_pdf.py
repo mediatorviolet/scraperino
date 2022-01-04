@@ -4,7 +4,7 @@ from sample.custom_sort import sort_by_name
 
 
 def image_to_pdf(dirname, filename):
-    image_list = [Image.open(os.path.join(dirname, x)).convert('L') for x in sort_by_name(os.listdir(dirname)) if
+    image_list = [Image.open(os.path.join(dirname, x)).convert('RGB') for x in sort_by_name(os.listdir(dirname)) if
                   x.endswith('.jpg')]
     image_list[0].save(dirname + filename, save_all=True, append_images=image_list[1:])
 
