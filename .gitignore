@@ -5,3 +5,9 @@ assets/
 **/__pycache__
 resources.txt
 geckodriver.log
+ghost_scraper.py
+ghost_standalone_scraper.py
+img_scraperino.py
+instagram_scraper.py
+main.py
+scraperinette.py
