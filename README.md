@@ -2,6 +2,10 @@
 
 Some scraperinoes
 
+## About
+
+This tool scrape all image file from https://scansmangas.xyz and convert it to a PDF file.
+
 ## Installation
 
 - Make sure python is installed
@@ -15,7 +19,7 @@ Some scraperinoes
 Run
 
 ```bash
-$ python scansmangas_scraper.py
+python scansmangas_scraper.py
 ````
 
 Follow the instructions
