@@ -6,9 +6,11 @@ import requests
 from bs4 import BeautifulSoup
 from sample.move_file import move_file
 from sample.image_to_pdf import image_to_pdf
-from sample.loading_animation import load_bar
 from sample.get_chapters import get_chapters
-from sample.dict_utils import search_index
+from sample.loading_animation import load_bar
+from sample.utils import clean_img_tag
+from sample.utils import search_index_from_dict
+from sample.utils import rmdir
 
 
 # Todo: sur le long terme (ou pas), modulariser le programme pour pouvoir l'utiliser sur d'autres sites
@@ -77,7 +79,7 @@ def set_working_dir(name):
         should_change_name = input(
             f'The directory \'{dir_name}\' already exists.\n Would you like to create a new one? (yes, no) ')
 
-        if should_change_name == 'yes':
+        if should_change_name in ['yes', 'ye', 'y']:
             new_name = input('Please enter a new name and press enter: ')
             new_dir_name = os.path.join(os.getcwd(), 'loot/' + new_name)
             os.makedirs(new_dir_name)
@@ -105,12 +107,6 @@ def scan_down(scans):
             f_out.write(sc.content)
 
 
-def clean_img_tag(img):
-    img["src"] = img["src"].replace('\n', '')
-
-    return img
-
-
 def clean_base_url(url):
     if url.endswith('?im='):
         return url
@@ -120,10 +116,6 @@ def clean_base_url(url):
         trailing_digits = re.search(r"(\d+)$", url).group()
 
         return url.replace(trailing_digits, '')
-
-
-def increment_url(url, i):
-    return clean_base_url(re.sub(r'(?<=-)(\d+)(?=-vf)', str(i), url))
 
 
 def main():
@@ -141,8 +133,8 @@ def main():
     print('\n')
 
     chapters = get_chapters(url)
-    start_index = search_index(chapters, 'chapter', first_chapter)
-    end_index = search_index(chapters, 'chapter', last_chapter)
+    start_index = search_index_from_dict(chapters, 'chapter', first_chapter)
+    end_index = search_index_from_dict(chapters, 'chapter', last_chapter)
 
     for chap in chapters[start_index:end_index + 1]:
         print(clean_base_url(chap["url"]))
@@ -172,10 +164,7 @@ def main():
         os.chdir('..')
         os.chdir('..')
 
-        try:
-            shutil.rmtree(f'loot/{dir_name}')
-        except OSError as e:
-            print("Error: %s: %s" % (f'loot/{dir_name}', e.strerror))
+        rmdir(f"loot/{dir_name}")
 
 
 if __name__ == "__main__":

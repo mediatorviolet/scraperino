@@ -7,7 +7,7 @@ def filedown(url, filename):
     """
     with open(filename, 'wb') as f_out:
         file = requests.get(url)
-        print(f'writing {filename}')
+        # print(f'writing {filename}')
         f_out.write(file.content)
 
 
