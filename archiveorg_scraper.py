@@ -1,4 +1,5 @@
 import re
+import os
 import json
 import requests
 import sample.utils as utils
@@ -44,7 +45,7 @@ def handle_zip_file(file, destination_folder):
     itp(file.replace('.zip', '_jp2'), file.replace('.zip', '.pdf').replace('loot/', ''))
     move_file(file.replace('.zip', '_jp2'), file.replace('.zip', '.pdf').replace('loot/', ''), destination_folder)
     utils.rmdir(file.replace('.zip', '_jp2'))
-    # Todo: rm remaining zipfile
+    os.remove(file)
 
 
 def main():
